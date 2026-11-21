@@ -1,4 +1,4 @@
-package httpapi
+package handler
 
 import (
 	"math"
@@ -12,14 +12,14 @@ import (
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param product body CreateProductRequest true "Product data"
-// @Success 201 {object} GetProductResponse
+// @Param product body createProductRequest true "Product data"
+// @Success 201 {object} getProductResponse
 // @Failure 400 {object} map[string]string
 // @Failure 409 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/products [post]
 func (api *API) createProduct(writer http.ResponseWriter, request *http.Request) {
-	var req CreateProductRequest
+	var req createProductRequest
 	if err := decodeJSON(writer, request, &req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return
@@ -42,7 +42,7 @@ func (api *API) createProduct(writer http.ResponseWriter, request *http.Request)
 // @Security BearerAuth
 // @Produce json
 // @Param id path string true "Product UUID"
-// @Success 200 {object} GetProductResponse
+// @Success 200 {object} getProductResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string
@@ -66,7 +66,7 @@ func (api *API) getProductByID(writer http.ResponseWriter, request *http.Request
 // @Tags Products
 // @Security BearerAuth
 // @Produce json
-// @Success 200 {object} GetProductsResponse
+// @Success 200 {object} getProductsResponse
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/products [get]
 func (api *API) getAvailableProducts(writer http.ResponseWriter, request *http.Request) {
@@ -84,7 +84,7 @@ func (api *API) getAvailableProducts(writer http.ResponseWriter, request *http.R
 // @Security BearerAuth
 // @Accept json
 // @Param id path string true "Product UUID"
-// @Param amount body DecreaseProductStockRequest true "Quantity to decrease"
+// @Param amount body decreaseProductStockRequest true "Quantity to decrease"
 // @Success 204 "Stock decreased"
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
@@ -97,7 +97,7 @@ func (api *API) decreaseProductStock(writer http.ResponseWriter, request *http.R
 		writeError(writer, http.StatusBadRequest, "invalid product ID")
 		return
 	}
-	var req DecreaseProductStockRequest
+	var req decreaseProductStockRequest
 	if err := decodeJSON(writer, request, &req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return

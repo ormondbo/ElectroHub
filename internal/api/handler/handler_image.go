@@ -1,4 +1,4 @@
-package httpapi
+package handler
 
 import (
 	"electrohub/internal/api/domain"

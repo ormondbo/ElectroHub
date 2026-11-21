@@ -1,4 +1,4 @@
-package httpapi
+package handler
 
 import (
 	"net/http"
@@ -11,14 +11,14 @@ import (
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param supplier body CreateSupplierRequest true "Supplier data"
-// @Success 201 {object} GetSupplierResponse
+// @Param supplier body createSupplierRequest true "Supplier data"
+// @Success 201 {object} getSupplierResponse
 // @Failure 400 {object} map[string]string
 // @Failure 409 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/suppliers [post]
 func (api *API) createSupplier(writer http.ResponseWriter, request *http.Request) {
-	var req CreateSupplierRequest
+	var req createSupplierRequest
 	if err := decodeJSON(writer, request, &req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return
@@ -41,7 +41,7 @@ func (api *API) createSupplier(writer http.ResponseWriter, request *http.Request
 // @Security BearerAuth
 // @Accept json
 // @Param id path string true "Supplier UUID"
-// @Param address body UpdateSupplierAddressRequest true "New address"
+// @Param address body updateSupplieraddressRequest true "New address"
 // @Success 204 "Updated"
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
@@ -53,7 +53,7 @@ func (api *API) updateSupplierAddress(writer http.ResponseWriter, request *http.
 		writeError(writer, http.StatusBadRequest, "invalid supplier ID")
 		return
 	}
-	var req UpdateSupplierAddressRequest
+	var req updateSupplieraddressRequest
 	if err := decodeJSON(writer, request, &req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return
@@ -101,7 +101,7 @@ func (api *API) deleteSupplier(writer http.ResponseWriter, request *http.Request
 // @Tags Suppliers
 // @Security BearerAuth
 // @Produce json
-// @Success 200 {object} GetSuppliersResponse
+// @Success 200 {object} getSupplierResponse
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/suppliers [get]
 func (api *API) getSuppliers(writer http.ResponseWriter, request *http.Request) {
@@ -119,7 +119,7 @@ func (api *API) getSuppliers(writer http.ResponseWriter, request *http.Request) 
 // @Security BearerAuth
 // @Produce json
 // @Param id path string true "Supplier UUID"
-// @Success 200 {object} GetSupplierResponse
+// @Success 200 {object} getSupplierResponse
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
 // @Failure 500 {object} map[string]string

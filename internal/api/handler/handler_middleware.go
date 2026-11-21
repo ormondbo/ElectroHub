@@ -1,4 +1,4 @@
-package httpapi
+package handler
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	authpb "shop/auth/proto"
+	authpb "electrohub/internal/proto/auth"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,14 +14,6 @@ import (
 
 type userIDKey struct{}
 type accessTokenKey struct{}
-
-type AuthClient interface {
-	Register(ctx context.Context, req *authpb.RegisterRequest) (*authpb.RegisterResponse, error)
-	Authenticate(ctx context.Context, req *authpb.LoginRequest) (*authpb.LoginResponse, error)
-	ResetPassword(ctx context.Context, req *authpb.ResetPasswordRequest) (*authpb.ResetPasswordResponse, error)
-	ValidateToken(ctx context.Context, req *authpb.ValidateTokenRequest) (*authpb.ValidateTokenResponse, error)
-	ChangePassword(ctx context.Context, req *authpb.ChangePasswordRequest) (*authpb.ChangePasswordResponse, error)
-}
 
 func (api *API) authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +23,7 @@ func (api *API) authMiddleware(next http.Handler) http.Handler {
 			writeError(w, http.StatusUnauthorized, "missing or invalid authorization header")
 			return
 		}
+
 		response, err := api.auth.ValidateToken(r.Context(), &authpb.ValidateTokenRequest{AccessToken: parts[1]})
 		if err != nil {
 			log.Printf("validate access token: %v", err)
@@ -46,6 +39,7 @@ func (api *API) authMiddleware(next http.Handler) http.Handler {
 			writeError(w, http.StatusUnauthorized, "invalid or expired token")
 			return
 		}
+
 		ctx := context.WithValue(r.Context(), userIDKey{}, response.GetUserId())
 		ctx = context.WithValue(ctx, accessTokenKey{}, parts[1])
 		next.ServeHTTP(w, r.WithContext(ctx))

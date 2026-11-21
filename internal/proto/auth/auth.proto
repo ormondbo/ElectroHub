@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "electrohub/internal/proto/auth;authpb";
+
+service AuthService {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+    rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+    rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+}
+
+message RegisterRequest {
+    string email = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string phone = 4;
+    string password = 5;
+}
+
+message RegisterResponse {
+    string user_id = 1;
+    string message = 2;
+    string access_token = 3;
+    string token_type = 4;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string access_token = 1;
+    string token_type = 2;
+}
+
+message ValidateTokenRequest {
+    string access_token = 1;
+}
+
+message ValidateTokenResponse {
+    bool valid = 1;
+    string user_id = 2;
+}
+
+message ChangePasswordRequest {
+    string access_token = 1;
+    string old_password = 2;
+    string new_password = 3;
+}
+
+message ChangePasswordResponse {
+    string message = 1;
+}
+
+message ResetPasswordRequest {
+    string email = 1;
+}
+
+message ResetPasswordResponse {
+    string message = 1;
+}

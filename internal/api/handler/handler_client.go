@@ -1,4 +1,4 @@
-package httpapi
+package handler
 
 import (
 	"net/http"
@@ -12,13 +12,13 @@ import (
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param client body CreateClientRequest true "Client data"
-// @Success 201 {object} GetClientResponse
+// @Param client body createClientRequest true "Client data"
+// @Success 201 {object} getClientResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/clients [post]
 func (api *API) createClient(writer http.ResponseWriter, request *http.Request) {
-	var client_req CreateClientRequest
+	var client_req createClientRequest
 	if err := decodeJSON(writer, request, &client_req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return
@@ -68,7 +68,7 @@ func (api *API) deleteClient(writer http.ResponseWriter, request *http.Request) 
 // @Param offset query int false "Number of clients to skip before returning results"
 // @Param name query string false "Client first name; requires surname"
 // @Param surname query string false "Client surname; requires name"
-// @Success 200 {object} GetClientsResponse
+// @Success 200 {object} getClientsResponse
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /api/v1/clients [get]
@@ -119,7 +119,7 @@ func (api *API) getClients(writer http.ResponseWriter, request *http.Request) {
 // @Security BearerAuth
 // @Accept json
 // @Param id path string true "Client UUID"
-// @Param address body UpdateClientAddressRequest true "New address"
+// @Param address body updateClientaddressRequest true "New address"
 // @Success 204 "Updated"
 // @Failure 400 {object} map[string]string
 // @Failure 404 {object} map[string]string
@@ -131,7 +131,7 @@ func (api *API) updateClientAddress(writer http.ResponseWriter, request *http.Re
 		writeError(writer, http.StatusBadRequest, "invalid client ID")
 		return
 	}
-	var req UpdateClientAddressRequest
+	var req updateClientaddressRequest
 	if err := decodeJSON(writer, request, &req); err != nil {
 		writeError(writer, http.StatusBadRequest, "invalid JSON request: "+err.Error())
 		return

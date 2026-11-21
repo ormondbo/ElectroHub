@@ -1,14 +1,12 @@
-package httpapi
+package handler
 
-import (
-	"shop/internal/domain"
-)
+import "electrohub/internal/api/domain"
 
 // ======================================================================================================
 // Address
 // ======================================================================================================
 
-func toDomainAddress(req AddressRequest) domain.Address {
+func toDomainAddress(req addressRequest) domain.Address {
 	return domain.Address{
 		Country: req.Country,
 		City:    req.City,
@@ -20,7 +18,7 @@ func toDomainAddress(req AddressRequest) domain.Address {
 // Client
 // ======================================================================================================
 
-func toDomainClient(req CreateClientRequest) domain.Client {
+func toDomainClient(req createClientRequest) domain.Client {
 	client := domain.Client{
 		Name:     req.Name,
 		Surname:  req.Surname,
@@ -44,14 +42,14 @@ func toDomainClient(req CreateClientRequest) domain.Client {
 	return client
 }
 
-func toGetClientResponse(client domain.Client) GetClientResponse {
-	response := GetClientResponse{
+func toGetClientResponse(client domain.Client) getClientResponse {
+	response := getClientResponse{
 		ID:               client.ID,
 		Name:             client.Name,
 		Surname:          client.Surname,
 		Birthday:         client.Birthday,
 		RegistrationDate: client.Registration_date,
-		Address: AddressResponse{
+		Address: addressResponse{
 			ID:      client.Address.ID,
 			Country: client.Address.Country,
 			City:    client.Address.City,
@@ -71,9 +69,9 @@ func toGetClientResponse(client domain.Client) GetClientResponse {
 	return response
 }
 
-func toGetClientsResponse(clients []domain.Client) GetClientsResponse {
-	response := GetClientsResponse{
-		Clients: make([]GetClientResponse, 0, len(clients)),
+func toGetClientsResponse(clients []domain.Client) getClientsResponse {
+	response := getClientsResponse{
+		Clients: make([]getClientResponse, 0, len(clients)),
 	}
 	for _, client := range clients {
 		response.Clients = append(
@@ -88,7 +86,7 @@ func toGetClientsResponse(clients []domain.Client) GetClientsResponse {
 // Product
 // ======================================================================================================
 
-func toDomainProduct(req CreateProductRequest) domain.Product {
+func toDomainProduct(req createProductRequest) domain.Product {
 	return domain.Product{
 		Name:            req.Name,
 		Category:        req.Category,
@@ -99,8 +97,8 @@ func toDomainProduct(req CreateProductRequest) domain.Product {
 	}
 }
 
-func toGetProductResponse(product domain.Product) GetProductResponse {
-	return GetProductResponse{
+func toGetProductResponse(product domain.Product) getProductResponse {
+	return getProductResponse{
 		ID:             product.ID,
 		Name:           product.Name,
 		Category:       product.Category,
@@ -112,9 +110,9 @@ func toGetProductResponse(product domain.Product) GetProductResponse {
 	}
 }
 
-func toGetProductsResponse(products []domain.Product) GetProductsResponse {
-	response := GetProductsResponse{
-		Products: make([]GetProductResponse, 0, len(products)),
+func toGetProductsResponse(products []domain.Product) getProductsResponse {
+	response := getProductsResponse{
+		Products: make([]getProductResponse, 0, len(products)),
 	}
 	for _, product := range products {
 		response.Products = append(
@@ -129,7 +127,7 @@ func toGetProductsResponse(products []domain.Product) GetProductsResponse {
 // Suppliers
 // ======================================================================================================
 
-func toDomainSupplier(req CreateSupplierRequest) domain.Supplier {
+func toDomainSupplier(req createSupplierRequest) domain.Supplier {
 	return domain.Supplier{
 		Name:         req.Name,
 		Phone_number: req.PhoneNumber,
@@ -141,12 +139,12 @@ func toDomainSupplier(req CreateSupplierRequest) domain.Supplier {
 	}
 }
 
-func toGetSupplierResponse(supplier domain.Supplier) GetSupplierResponse {
-	return GetSupplierResponse{
+func toGetSupplierResponse(supplier domain.Supplier) getSupplierResponse {
+	return getSupplierResponse{
 		ID:          supplier.ID,
 		Name:        supplier.Name,
 		PhoneNumber: supplier.Phone_number,
-		Address: AddressResponse{
+		Address: addressResponse{
 			ID:      supplier.Address.ID,
 			Country: supplier.Address.Country,
 			City:    supplier.Address.City,
@@ -155,9 +153,9 @@ func toGetSupplierResponse(supplier domain.Supplier) GetSupplierResponse {
 	}
 }
 
-func toGetSuppliersResponse(suppliers []domain.Supplier) GetSuppliersResponse {
-	response := GetSuppliersResponse{
-		Suppliers: make([]GetSupplierResponse, 0, len(suppliers)),
+func toGetSuppliersResponse(suppliers []domain.Supplier) getSuppliersResponse {
+	response := getSuppliersResponse{
+		Suppliers: make([]getSupplierResponse, 0, len(suppliers)),
 	}
 
 	for _, supplier := range suppliers {

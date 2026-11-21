@@ -1,0 +1,1223 @@
+basePath: /
+definitions:
+  handler.addressRequest:
+    properties:
+      city:
+        example: Москва
+        type: string
+      country:
+        example: Россия
+        type: string
+      street:
+        example: ул. Тверская, д. 1
+        type: string
+    required:
+    - city
+    - country
+    - street
+    type: object
+  handler.addressResponse:
+    properties:
+      city:
+        example: Москва
+        type: string
+      country:
+        example: Россия
+        type: string
+      id:
+        example: 6b8a1d97-859b-4c5e-913a-01bfa34b201c
+        type: string
+      street:
+        example: ул. Тверская, д. 1
+        type: string
+    type: object
+  handler.authRequest:
+    properties:
+      email:
+        example: user@example.com
+        format: email
+        type: string
+      password:
+        example: strong-password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  handler.changePasswordRequest:
+    properties:
+      new_password:
+        example: new-password
+        type: string
+      old_password:
+        example: current-password
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
+  handler.changePasswordResponse:
+    properties:
+      message:
+        example: password changed successfully
+        type: string
+    type: object
+  handler.createClientRequest:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressRequest'
+      birthday:
+        example: "1990-05-20T00:00:00Z"
+        type: string
+      gender:
+        enum:
+        - male
+        - female
+        - helicopter
+        - other
+        example: other
+        type: string
+      name:
+        example: Александр
+        type: string
+      surname:
+        example: Иванов
+        type: string
+    required:
+    - address
+    - birthday
+    - gender
+    - name
+    - surname
+    type: object
+  handler.createProductRequest:
+    properties:
+      available_stock:
+        example: 12
+        type: integer
+      category:
+        example: Бытовая техника
+        type: string
+      image_id:
+        example: 00000000-0000-0000-0000-000000000000
+        format: uuid
+        type: string
+      name:
+        example: Электрический чайник
+        type: string
+      price:
+        example: 49.99
+        type: number
+      supplier_id:
+        example: f8c93d19-130e-46d3-86dd-7f84880ed83d
+        format: uuid
+        type: string
+    required:
+    - category
+    - name
+    - price
+    - supplier_id
+    type: object
+  handler.createSupplierRequest:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressRequest'
+      name:
+        example: ООО «ТехноСнаб»
+        type: string
+      phone_number:
+        example: +7-495-123-45-67
+        type: string
+    required:
+    - address
+    - name
+    - phone_number
+    type: object
+  handler.decreaseProductStockRequest:
+    properties:
+      amount:
+        example: 2
+        type: integer
+    required:
+    - amount
+    type: object
+  handler.getClientResponse:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressResponse'
+      birthday:
+        example: "1990-05-20T00:00:00Z"
+        type: string
+      gender:
+        example: other
+        type: string
+      id:
+        example: f8c93d19-130e-46d3-86dd-7f84880ed83d
+        type: string
+      name:
+        example: Александр
+        type: string
+      registration_date:
+        example: "2025-01-01T12:00:00Z"
+        type: string
+      surname:
+        example: Иванов
+        type: string
+    type: object
+  handler.getClientsResponse:
+    properties:
+      clients:
+        items:
+          $ref: '#/definitions/handler.getClientResponse'
+        type: array
+    type: object
+  handler.getProductResponse:
+    properties:
+      available_stock:
+        example: 12
+        type: integer
+      category:
+        example: Бытовая техника
+        type: string
+      id:
+        example: f8c93d19-130e-46d3-86dd-7f84880ed83d
+        type: string
+      image_id:
+        example: 00000000-0000-0000-0000-000000000000
+        format: uuid
+        type: string
+      last_update_date:
+        type: string
+      name:
+        example: Электрический чайник
+        type: string
+      price:
+        example: 49.99
+        type: number
+      supplier_id:
+        example: f8c93d19-130e-46d3-86dd-7f84880ed83d
+        format: uuid
+        type: string
+    type: object
+  handler.getProductsResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/handler.getProductResponse'
+        type: array
+    type: object
+  handler.getSupplierResponse:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressResponse'
+      id:
+        example: f8c93d19-130e-46d3-86dd-7f84880ed83d
+        type: string
+      name:
+        example: ООО «ТехноСнаб»
+        type: string
+      phone_number:
+        example: +7-495-123-45-67
+        type: string
+    type: object
+  handler.registerRequest:
+    properties:
+      email:
+        example: user@example.com
+        format: email
+        type: string
+      first_name:
+        example: Иван
+        type: string
+      last_name:
+        example: Иванов
+        type: string
+      password:
+        example: strong-password
+        type: string
+      phone:
+        example: "+79990000000"
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - phone
+    type: object
+  handler.resetRequest:
+    properties:
+      email:
+        example: user@example.com
+        format: email
+        type: string
+    required:
+    - email
+    type: object
+  handler.updateClientaddressRequest:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressRequest'
+    required:
+    - address
+    type: object
+  handler.updateSupplieraddressRequest:
+    properties:
+      address:
+        $ref: '#/definitions/handler.addressRequest'
+    required:
+    - address
+    type: object
+info:
+  contact: {}
+  description: REST API for managing clients, products, suppliers, and product images.
+  title: Store API
+  version: "1.0"
+paths:
+  /api/v1/clients:
+    get:
+      description: Returns all clients with optional pagination, or searches by both
+        name and surname.
+      parameters:
+      - description: Maximum number of clients to return
+        in: query
+        name: limit
+        type: integer
+      - description: Number of clients to skip before returning results
+        in: query
+        name: offset
+        type: integer
+      - description: Client first name; requires surname
+        in: query
+        name: name
+        type: string
+      - description: Client surname; requires name
+        in: query
+        name: surname
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getClientsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List clients or search by name and surname
+      tags:
+      - Clients
+    post:
+      consumes:
+      - application/json
+      description: Creates a client and its address when the address does not already
+        exist.
+      parameters:
+      - description: Client data
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.getClientResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a client
+      tags:
+      - Clients
+  /api/v1/clients/{id}:
+    delete:
+      description: Deletes the client identified by its UUID.
+      parameters:
+      - description: Client UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a client
+      tags:
+      - Clients
+  /api/v1/clients/{id}/address:
+    put:
+      consumes:
+      - application/json
+      description: Replaces the address associated with the specified client.
+      parameters:
+      - description: Client UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New address
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateClientaddressRequest'
+      responses:
+        "204":
+          description: Updated
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Change a client's address
+      tags:
+      - Clients
+  /api/v1/images:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads an image file and associates it with the specified product.
+      parameters:
+      - description: UUID of the product that will receive the image
+        in: formData
+        name: product_id
+        required: true
+        type: string
+      - description: Image file to upload
+        in: formData
+        name: image
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Image added
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "413":
+          description: Request Entity Too Large
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "415":
+          description: Unsupported Media Type
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Add an image to a product
+      tags:
+      - Images
+  /api/v1/images/{id}:
+    delete:
+      description: Deletes the image and removes its association from any product.
+      parameters:
+      - description: Image UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete an image
+      tags:
+      - Images
+    get:
+      description: Returns the image identified by its UUID as binary data.
+      parameters:
+      - description: Image UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Download an image by ID
+      tags:
+      - Images
+    put:
+      consumes:
+      - multipart/form-data
+      description: Replaces the image data for the specified image UUID.
+      parameters:
+      - description: Image UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Replacement image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      responses:
+        "204":
+          description: Image replaced
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "413":
+          description: Request Entity Too Large
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "415":
+          description: Unsupported Media Type
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Replace an image
+      tags:
+      - Images
+  /api/v1/products:
+    get:
+      description: Returns products whose available stock is greater than zero.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getProductsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List products with available stock
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Creates a product for an existing supplier.
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.getProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a product
+      tags:
+      - Products
+  /api/v1/products/{id}:
+    delete:
+      description: Deletes the product identified by its UUID.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a product
+      tags:
+      - Products
+    get:
+      description: Returns the product identified by its UUID.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get a product by ID
+      tags:
+      - Products
+  /api/v1/products/{id}/image:
+    get:
+      description: Returns the image associated with the specified product as binary
+        data.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Download a product image
+      tags:
+      - Images
+  /api/v1/products/{id}/stock:
+    patch:
+      consumes:
+      - application/json
+      description: Decreases the stock by the requested amount when sufficient stock
+        is available.
+      parameters:
+      - description: Product UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Quantity to decrease
+        in: body
+        name: amount
+        required: true
+        schema:
+          $ref: '#/definitions/handler.decreaseProductStockRequest'
+      responses:
+        "204":
+          description: Stock decreased
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Decrease product stock
+      tags:
+      - Products
+  /api/v1/suppliers:
+    get:
+      description: Returns all suppliers. An empty list is returned when there are
+        no suppliers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getSupplierResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List suppliers
+      tags:
+      - Suppliers
+    post:
+      consumes:
+      - application/json
+      description: Creates a supplier and its address when the address does not already
+        exist.
+      parameters:
+      - description: Supplier data
+        in: body
+        name: supplier
+        required: true
+        schema:
+          $ref: '#/definitions/handler.createSupplierRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.getSupplierResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a supplier
+      tags:
+      - Suppliers
+  /api/v1/suppliers/{id}:
+    delete:
+      description: Deletes the supplier identified by its UUID.
+      parameters:
+      - description: Supplier UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a supplier
+      tags:
+      - Suppliers
+    get:
+      description: Returns the supplier identified by its UUID.
+      parameters:
+      - description: Supplier UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getSupplierResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get a supplier by ID
+      tags:
+      - Suppliers
+  /api/v1/suppliers/{id}/address:
+    put:
+      consumes:
+      - application/json
+      description: Replaces the address associated with the specified supplier.
+      parameters:
+      - description: Supplier UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: New address
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateSupplieraddressRequest'
+      responses:
+        "204":
+          description: Updated
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Change a supplier's address
+      tags:
+      - Suppliers
+  /auth:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/handler.authRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Authenticate a user
+      tags:
+      - Authentication
+  /auth/change-password:
+    put:
+      consumes:
+      - application/json
+      description: Changes the password after verifying the current password. Requires
+        a valid access token.
+      parameters:
+      - description: Current and new passwords
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.changePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.changePasswordResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "503":
+          description: Service Unavailable
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Change the authenticated user's password
+      tags:
+      - Authentication
+  /register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.registerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a user
+      tags:
+      - Authentication
+  /reset:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account email
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/handler.resetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Recover a user password
+      tags:
+      - Authentication
+securityDefinitions:
+  BearerAuth:
+    description: Send the JWT access token with the Bearer authorization scheme.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

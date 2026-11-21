@@ -1,7 +1,8 @@
-package httpapi
+package handler
 
 import (
 	"electrohub/internal/api/service"
+	"electrohub/internal/api/web/swagger"
 	"log"
 	"net/http"
 )
@@ -11,14 +12,14 @@ type API struct {
 	product  *service.ProductService
 	supplier *service.SupplierService
 	image    *service.ImageService
-	auth     AuthClient
+	auth     *service.AuthService
 
 	mux          *http.ServeMux
 	protectedMux *http.ServeMux
 }
 
 func NewAPI(client *service.ClientService, product *service.ProductService,
-	supplier *service.SupplierService, image *service.ImageService, auth AuthClient,
+	supplier *service.SupplierService, image *service.ImageService, auth *service.AuthService,
 ) *API {
 	api := &API{
 		client:   client,
@@ -35,7 +36,6 @@ func NewAPI(client *service.ClientService, product *service.ProductService,
 	return api
 }
 
-// обозвать по-другому
 func (api *API) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	defer func() {
 		if recovered := recover(); recovered != nil {
@@ -58,8 +58,8 @@ func (api *API) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 
 // Поправить
 func (api *API) routes() {
-	api.mux.HandleFunc("GET /swagger/", serveSwaggerUI)
-	api.mux.HandleFunc("GET /swagger/doc.json", serveSwaggerSpec)
+	api.mux.Handle("GET /swagger/", swagger.ServeSwaggerUI())
+	api.mux.HandleFunc("POST /swagger/doc.json", swagger.ServeSwaggerSpec)
 
 	api.mux.HandleFunc("POST /register", api.register)
 	api.mux.HandleFunc("POST /auth", api.authenticate)

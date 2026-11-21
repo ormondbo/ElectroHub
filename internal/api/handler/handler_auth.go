@@ -1,9 +1,9 @@
-package httpapi
+package handler
 
 import (
 	"net/http"
 
-	authpb "shop/auth/proto"
+	authpb "electrohub/internal/proto/auth"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

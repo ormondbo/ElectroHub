@@ -1,6 +1,9 @@
-package httpapi
+package handler
 
 import (
+	"electrohub/internal/api/repository"
+	"electrohub/internal/api/service"
+
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,8 +12,6 @@ import (
 	"math"
 	"mime"
 	"net/http"
-	"shop/internal/repository"
-	"shop/internal/service"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -25,7 +26,7 @@ import (
 // ======================================================================================================
 
 func decodeJSON(writer http.ResponseWriter, request *http.Request, destination any) error {
-	request.Body = http.MaxBytesReader(writer, request.Body, 1<<20) //Max 20 MB
+	request.Body = http.MaxBytesReader(writer, request.Body, 10<<20) //Max 20 MB
 
 	decoder := json.NewDecoder(request.Body)
 	decoder.DisallowUnknownFields()
@@ -70,7 +71,14 @@ func readImage(writer http.ResponseWriter, request *http.Request) ([]byte, error
 		writeError(writer, http.StatusBadRequest, "invalid image Content-Type")
 		return nil, err
 	}
+	/*
+		The technical specifications required checking only for the "application/octet-stream" type;
+		however, to support an older version of OpenAPI, the "multipart/form-data" type was also defined.
+		When accessing the API directly, the code associated with this tag is either not utilized
+		or represents an obsolete method of access. Please do not use "multipart/form-data".
 
+		OPEN_TAG: old_openapi
+	*/
 	if mediaType == "multipart/form-data" {
 		if err := request.ParseMultipartForm(10 << 20); err != nil {
 			var maxBytesError *http.MaxBytesError
@@ -78,41 +86,53 @@ func readImage(writer http.ResponseWriter, request *http.Request) ([]byte, error
 				writeError(writer, http.StatusRequestEntityTooLarge, "image exceeds the 10 MiB limit")
 				return nil, err
 			}
+
 			writeError(writer, http.StatusBadRequest, "invalid multipart image request")
 			return nil, err
 		}
+
 		if request.MultipartForm != nil {
 			defer request.MultipartForm.RemoveAll()
 		}
+
 		file, _, err := request.FormFile("image")
 		if err != nil {
 			writeError(writer, http.StatusBadRequest, "image file is required")
 			return nil, err
 		}
+
 		data, readErr := io.ReadAll(io.LimitReader(file, (10<<20)+1))
 		closeErr := file.Close()
+
 		if readErr != nil {
 			writeError(writer, http.StatusBadRequest, "failed to read image")
 			return nil, readErr
 		}
+
 		if closeErr != nil {
 			writeError(writer, http.StatusBadRequest, "failed to read image")
 			return nil, closeErr
 		}
+
 		if len(data) > 10<<20 {
 			writeError(writer, http.StatusRequestEntityTooLarge, "image exceeds the 10 MiB limit")
 			return nil, errors.New("image exceeds the size limit")
 		}
+
 		if len(data) == 0 {
 			writeError(writer, http.StatusBadRequest, "image cannot be empty")
 			return nil, errors.New("empty image")
 		}
+
 		return data, nil
 	}
+	// CLOSE_TAG: old_openapi
+
 	if mediaType != "" && mediaType != "application/octet-stream" {
-		writeError(writer, http.StatusUnsupportedMediaType, "image must use multipart/form-data or application/octet-stream")
+		writeError(writer, http.StatusUnsupportedMediaType, "image must use application/octet-stream")
 		return nil, errors.New("unsupported image Content-Type")
 	}
+
 	data, err := io.ReadAll(request.Body)
 	if err != nil {
 		var maxBytesError *http.MaxBytesError
@@ -120,13 +140,16 @@ func readImage(writer http.ResponseWriter, request *http.Request) ([]byte, error
 			writeError(writer, http.StatusRequestEntityTooLarge, "image exceeds the 10 MiB limit")
 			return nil, err
 		}
+
 		writeError(writer, http.StatusBadRequest, "failed to read image")
 		return nil, err
 	}
+
 	if len(data) == 0 {
 		writeError(writer, http.StatusBadRequest, "image cannot be empty")
 		return nil, errors.New("empty image")
 	}
+
 	return data, nil
 }
 
@@ -134,7 +157,7 @@ func readImage(writer http.ResponseWriter, request *http.Request) ([]byte, error
 // Validators
 // ======================================================================================================
 
-func validateAddress(address AddressRequest) error {
+func validateAddress(address addressRequest) error {
 	if strings.TrimSpace(address.Country) == "" {
 		return errors.New("country is required")
 	}
@@ -152,7 +175,7 @@ func validateAddress(address AddressRequest) error {
 	return nil
 }
 
-func validateClient(request CreateClientRequest) error {
+func validateClient(request createClientRequest) error {
 	if strings.TrimSpace(request.Name) == "" || utf8.RuneCountInString(request.Name) > 100 {
 		return errors.New("name is required and must be at most 100 characters")
 	}
@@ -163,14 +186,14 @@ func validateClient(request CreateClientRequest) error {
 		return errors.New("birthday must be a valid date that is not in the future")
 	}
 	switch request.Gender {
-	case "male", "female", "helicopter", "other":
+	case "male", "female", "other":
 	default:
-		return errors.New("gender must be male, female, helicopter, or other")
+		return errors.New("gender must be male, female or other")
 	}
 	return validateAddress(request.Address)
 }
 
-func validateProduct(request CreateProductRequest) error {
+func validateProduct(request createProductRequest) error {
 	if strings.TrimSpace(request.Name) == "" || utf8.RuneCountInString(request.Name) > 255 {
 		return errors.New("name is required and must be at most 255 characters")
 	}
@@ -189,7 +212,7 @@ func validateProduct(request CreateProductRequest) error {
 	return nil
 }
 
-func validateSupplier(request CreateSupplierRequest) error {
+func validateSupplier(request createSupplierRequest) error {
 	if strings.TrimSpace(request.Name) == "" || utf8.RuneCountInString(request.Name) > 255 {
 		return errors.New("name is required and must be at most 255 characters")
 	}
