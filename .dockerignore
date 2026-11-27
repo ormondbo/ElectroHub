@@ -1,0 +1,9 @@
+**
+!auth-service/
+!auth-service/**
+!electrohub/
+!electrohub/**
+!contracts/
+!contracts/**
+!postgres/
+!postgres/**

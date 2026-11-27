@@ -1,0 +1,5 @@
+**
+!postgres/
+!postgres/init/
+!postgres/init/*.sh
+!postgres/init/*.sql

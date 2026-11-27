@@ -1,0 +1,64 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    container_name: electrohub_api_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+
+      SHOP_APP_PASSWORD: ${SHOP_APP_PASSWORD:?SHOP_APP_PASSWORD is required}
+      SHOP_READ_1_PASSWORD: ${SHOP_READ_1_PASSWORD:?SHOP_READ_1_PASSWORD is required}
+      SHOP_READ_2_PASSWORD: ${SHOP_READ_2_PASSWORD:?SHOP_READ_2_PASSWORD is required}
+
+      AUTH_POSTGRES_DB: ${AUTH_POSTGRES_DB:-auth}
+      AUTH_POSTGRES_USER: ${AUTH_POSTGRES_USER:-auth_app}
+      AUTH_POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD:?AUTH_POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    networks:
+      - backend
+
+  main_api_server:
+    build:
+      context: .
+      dockerfile: electrohub/Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "postgres://shop_app:${SHOP_APP_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      AUTH_GRPC_ADDR: "main_auth_server:50051"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      main_auth_server:
+        condition: service_started
+    networks:
+      - backend
+  
+  main_auth_server:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    restart: unless-stopped
+    environment:
+      AUTH_DATABASE_URL: "postgres://${AUTH_POSTGRES_USER}:${AUTH_POSTGRES_PASSWORD}@postgres:5432/${AUTH_POSTGRES_DB}?sslmode=disable"
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?JWT_SECRET_KEY is required}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:?JWT_ACCESS_TTL is required}
+    ports:
+      - "50051:50051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  postgres-data:

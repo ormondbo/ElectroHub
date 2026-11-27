@@ -11,7 +11,7 @@ RUN cd electrohub && go mod download
 RUN cd contracts && go mod download
 
 
-COPY electrohub/internal ./internal/internal
+COPY electrohub/internal ./electrohub/internal
 COPY electrohub/cmd ./electrohub/cmd
 COPY contracts/proto ./contracts/proto
 

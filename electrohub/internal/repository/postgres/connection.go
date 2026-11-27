@@ -12,23 +12,17 @@ import (
 )
 
 // Creating pgxPool to interact with database
-// Must be DATABASE_URL in ENV. If tables in database not created,
-// put migration files in dir ./migrations/ | only .sql supported
+// Must be DATABASE_URL in ENV.
 func NewPostgresPool(lifecycle fx.Lifecycle) (*pgxpool.Pool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
 	databaseURL := os.Getenv("DATABASE_URL")
 	if databaseURL == "" {
-		return nil, errors.New("DATABASE_URL must be set")
+		return nil, errors.New("DATABASE_URL environment variable is required")
 	}
 
-	config, err := pgxpool.ParseConfig(databaseURL)
-	if err != nil {
-		return nil, fmt.Errorf("parse database URL: %w", err)
-	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	pool, err := pgxpool.NewWithConfig(ctx, config)
+	pool, err := pgxpool.New(ctx, databaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("create PostgreSQL pool: %w", err)
 	}

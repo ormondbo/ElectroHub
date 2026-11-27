@@ -1,0 +1,5 @@
+**
+!electrohub/
+!electrohub/**
+!contracts/
+!contracts/**
